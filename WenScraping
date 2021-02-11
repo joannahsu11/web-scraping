@@ -1,0 +1,65 @@
+from tkinter import *
+from bs4 import BeautifulSoup
+import requests
+from selenium import webdriver
+
+
+f = open("ID.txt", "w")
+
+op = webdriver.ChromeOptions()
+op.add_argument('headless')
+op.add_argument("--no-sandbox")
+driver = webdriver.Chrome(executable_path='/Users/shaoyu/Desktop/VirusTotal_Mac/chromedriver', options=op)
+
+count=0
+loc = 'https://www.tenable.com/plugins/nessus/families/DNS?page='
+driver.get(loc)
+base_details=driver.execute_script("return document.querySelector('body').querySelector('section').querySelector('p')").text
+
+temp = (re.sub('Page 1 of .*?','', base_details, flags=re.DOTALL))
+pageNum=(temp.split(' • ', 1)[0])
+final=''
+#access all pages except for the last page
+for p in range (1,int(pageNum)):
+    k=0
+    page=loc+str(p)
+    r = requests.get(page)
+    soup = BeautifulSoup(r.text,"html.parser")
+    sel = soup.select("div.app__wrapper a")
+
+    #add this part to see what the indices for the IDs are.
+    #found that IDs are only in range from 30 to 80
+    '''for i in range(len(sel)):
+        print(i,sel[i])'''
+
+    for s in sel:
+        sel[k]=(s.text)
+        k=k+1
+
+    for k in range(30,80):
+        final=final+(str(sel[k]))+'\n'
+        count=count+1
+
+
+#access the last page
+for p in range (int(pageNum),int(pageNum)+1):
+    k=0
+    page=loc+str(p)
+    r = requests.get(page)
+    soup = BeautifulSoup(r.text,"html.parser")
+    sel = soup.select("div.app__wrapper a")
+
+    #known that the index for the ID in this page is #30, but not sure about the last one.
+    #use the variable k to know where the last one is.
+    for s in sel:
+        sel[k]=(s.text)
+        k=k+1
+    for k in range(30, k):
+        if 'Previous' in str(sel[k]):
+            break
+        final=final+(str(sel[k]))+'\n'
+        count = count + 1
+
+f.write(final)
+print("total:",count)
+f.close()
