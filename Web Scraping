@@ -1,3 +1,7 @@
+# The program is to extract ID's from https://www.tenable.com/plugins/nessus/families/DNS
+# Then put the data in a text file
+
+
 from tkinter import *
 from bs4 import BeautifulSoup
 import requests
