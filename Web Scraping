@@ -13,7 +13,9 @@ f = open("ID.txt", "w")
 op = webdriver.ChromeOptions()
 op.add_argument('headless')
 op.add_argument("--no-sandbox")
-driver = webdriver.Chrome(executable_path='/Users/shaoyu/Desktop/VirusTotal_Mac/chromedriver', options=op)
+
+#chromedriver directory
+driver = webdriver.Chrome(executable_path='chromedriver', options=op)
 
 count=0
 loc = 'https://www.tenable.com/plugins/nessus/families/DNS?page='
