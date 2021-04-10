@@ -1,3 +1,5 @@
+# Author: Joanna Hsu
+
 # The program is to extract ID's from https://www.tenable.com/plugins/nessus/families/DNS
 # Then put the data in a text file
 
